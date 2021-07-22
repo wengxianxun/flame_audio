@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/widgets.dart';
 
@@ -51,7 +48,7 @@ class Bgm extends WidgetsBindingObserver {
   Future<void> play(String filename, {double volume}) async {
     volume ??= 1;
 
-    if (audioPlayer != null && audioPlayer.state != AudioPlayerState.STOPPED) {
+    if (audioPlayer != null && audioPlayer.state != PlayerState.STOPPED) {
       audioPlayer.stop();
     }
 
@@ -87,22 +84,22 @@ class Bgm extends WidgetsBindingObserver {
   /// Pre-fetch an audio and store it in the cache.
   ///
   /// Alias of `audioCache.load();`.
-  Future<File> load(String file) => audioCache.load(file);
+  Future<Uri> load(String file) => audioCache.load(file);
 
   /// Pre-fetch a list of audios and store them in the cache.
   ///
   /// Alias of `audioCache.loadAll();`.
-  Future<List<File>> loadAll(List<String> files) => audioCache.loadAll(files);
+  Future<List<Uri>> loadAll(List<String> files) => audioCache.loadAll(files);
 
   /// Clears the file in the cache.
   ///
   /// Alias of `audioCache.clear();`.
-  void clear(String file) => audioCache.clear(file);
+  void clear(Uri file) => audioCache.clear(file);
 
   /// Clears all the audios in the cache.
   ///
   /// Alias of `audioCache.clearAll();`.
-  void clearCache() => audioCache.clearCache();
+  void clearCache() => audioCache.clearAll();
 
   /// Handler for AppLifecycleState changes.
   ///
@@ -112,7 +109,7 @@ class Bgm extends WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      if (isPlaying && audioPlayer?.state == AudioPlayerState.PAUSED) {
+      if (isPlaying && audioPlayer?.state == PlayerState.PAUSED) {
         audioPlayer.resume();
       }
     } else {
